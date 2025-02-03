@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parent Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Parent Dashboard</h1>
+    </header>
+    <div class="container">
+        <h2>Parent Actions</h2>
+        <button onclick="viewChildProgress()">View Child's Progress</button>
+        <button onclick="communicateTeacher()">Communicate with Teacher</button>
+        <button onclick="trackAttendance()">Track Attendance</button>
+        <div id="data-display" style="margin-top: 20px;">
+            <!-- Data will be displayed here -->
+        </div>
+    </div>
+
+    <script src="parent.js"></script>
+</body>
+</html>

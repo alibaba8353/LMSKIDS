@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Add some simple styling for the buttons and container */
+        .container {
+            padding: 20px;
+        }
+        button {
+            margin: 10px;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Student Dashboard</h1>
+    </header>
+
+    <div class="container">
+        <h2>Student Actions</h2>
+        <button onclick="viewAssignments()">View Assignments</button>
+        <button onclick="submitAssignment()">Submit Assignment</button>
+        <button onclick="viewProgress()">View Progress</button>
+        <button onclick="contactTeacher()">Contact Teacher</button>
+    </div>
+
+    <script>
+        // View Assignments functionality
+        function viewAssignments() {
+            const assignments = JSON.parse(localStorage.getItem('assignments')) || [];
+            if (assignments.length > 0) {
+                alert("Here are your assignments:\n" + assignments.map(assignment => `${assignment.name} - Due: ${assignment.dueDate}`).join('\n'));
+            } else {
+                alert("No assignments found.");
+            }
+        }
+
+        // Submit Assignment functionality
+        function submitAssignment() {
+            const assignmentName = prompt("Enter the assignment you want to submit:");
+            const assignments = JSON.parse(localStorage.getItem('assignments')) || [];
+            const assignment = assignments.find(a => a.name.toLowerCase() === assignmentName.toLowerCase());
+
+            if (assignment) {
+                if (assignment.completed) {
+                    alert(`You have already completed the assignment: ${assignmentName}`);
+                } else {
+                    const submissionDate = new Date().toISOString().split('T')[0]; // Current date in YYYY-MM-DD format
+                    alert(`You have submitted the assignment: ${assignmentName} on ${submissionDate}`);
+                    // Optionally, you could save the submission date to the assignment
+                }
+            } else {
+                alert("Assignment not found.");
+            }
+        }
+
+        // View Progress functionality
+        function viewProgress() {
+            // Sample progress data (You can replace it with actual progress data)
+            const progress = {
+                math: "A",
+                science: "B+",
+                history: "A-"
+            };
+            alert("Your Progress:\n" +
+                `Math: ${progress.math}\n` +
+                `Science: ${progress.science}\n` +
+                `History: ${progress.history}`
+            );
+        }
+
+        // Contact Teacher functionality
+        function contactTeacher() {
+            const teacherEmail = "teacher@example.com"; // Replace with actual teacher's email
+            const subject = prompt("Enter the subject of your message:");
+            const message = prompt("Enter your message:");
+
+            if (subject && message) {
+                alert(`Your message has been sent to the teacher at ${teacherEmail}\nSubject: ${subject}\nMessage: ${message}`);
+                // Here, you could implement an actual email-sending service if required.
+            } else {
+                alert("Please provide both subject and message to contact the teacher.");
+            }
+        }
+    </script>
+</body>
+</html>

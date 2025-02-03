@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Admin Dashboard</h1>
+    </header>
+    <div class="container">
+        <h2>Manage System</h2>
+        <button onclick="manageUsers()">Manage Users</button>
+        <button onclick="viewReports()">View Reports</button>
+        <button onclick="manageClasses()">Manage Classes</button>
+        <button onclick="manageAssignments()">Manage Assignments</button>
+        <button onclick="manageTeachers()">Manage Teachers</button>
+        <button onclick="manageStudents()">Manage Students</button>
+        <button onclick="manageParents()">Manage Parents</button>
+        <div id="data-display" style="margin-top: 20px;">
+            <!-- Data will be displayed here -->
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>

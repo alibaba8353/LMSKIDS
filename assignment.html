@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        button {
+            margin: 10px;
+        }
+        ul {
+            list-style-type: none;
+        }
+        li {
+            margin: 5px 0;
+            display: flex;
+            align-items: center;
+        }
+        li span {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Assignment Dashboard</h1>
+
+    <div>
+        <h3>Assignments</h3>
+        <ul id="assignment-list">
+            <!-- Assignments will be listed here -->
+        </ul>
+        <button onclick="addNewAssignment()">Add New Assignment</button>
+    </div>
+
+    <script>
+        // Function to load assignments from localStorage
+        function loadAssignments() {
+            const assignments = JSON.parse(localStorage.getItem('assignments')) || [];
+            const assignmentListElement = document.getElementById('assignment-list');
+            assignmentListElement.innerHTML = '';  // Clear the current list before adding new data
+            
+            if (assignments.length > 0) {
+                assignments.forEach(assignment => {
+                    assignmentListElement.innerHTML += `
+                        <li>
+                            <span>${assignment.name} - Due ${assignment.dueDate}</span>
+                            ${assignment.completed ? 
+                                `<span style="text-decoration: line-through;">Completed</span>` : 
+                                `<button onclick="markCompleted(this, '${assignment.id}')">Mark as Complete</button>`
+                            }
+                            <button onclick="editAssignment('${assignment.id}')">Edit</button>
+                            <button onclick="deleteAssignment('${assignment.id}')">Delete</button>
+                        </li>
+                    `;
+                });
+            } else {
+                assignmentListElement.innerHTML = '<li>No assignments found.</li>';
+            }
+        }
+
+        // Function to add a new assignment
+        function addNewAssignment() {
+            const assignmentName = prompt("Enter the assignment name:");
+            const dueDate = prompt("Enter the due date (e.g., 2025-02-10):");
+            
+            if (assignmentName && dueDate) {
+                const newAssignment = {
+                    id: new Date().getTime(),  // Unique ID based on current time
+                    name: assignmentName,
+                    dueDate: dueDate,
+                    completed: false
+                };
+                let assignments = JSON.parse(localStorage.getItem('assignments')) || [];
+                assignments.push(newAssignment);
+                localStorage.setItem('assignments', JSON.stringify(assignments));
+                loadAssignments();  // Reload the assignments after adding the new one
+            } else {
+                alert("Assignment name and due date are required.");
+            }
+        }
+
+        // Function to mark an assignment as completed
+        function markCompleted(button, assignmentId) {
+            let assignments = JSON.parse(localStorage.getItem('assignments')) || [];
+            const assignment = assignments.find(assignment => assignment.id === parseInt(assignmentId));
+
+            if (assignment) {
+                assignment.completed = true;
+                localStorage.setItem('assignments', JSON.stringify(assignments));
+                loadAssignments();  // Reload the assignments after marking as complete
+            }
+        }
+
+        // Function to edit an assignment
+        function editAssignment(assignmentId) {
+            let assignments = JSON.parse(localStorage.getItem('assignments')) || [];
+            const assignment = assignments.find(assignment => assignment.id === parseInt(assignmentId));
+
+            if (assignment) {
+                const newAssignmentName = prompt("Edit the assignment name:", assignment.name);
+                const newDueDate = prompt("Edit the due date:", assignment.dueDate);
+
+                if (newAssignmentName && newDueDate) {
+                    assignment.name = newAssignmentName;
+                    assignment.dueDate = newDueDate;
+                    localStorage.setItem('assignments', JSON.stringify(assignments));
+                    loadAssignments();  // Reload the assignments after editing
+                }
+            }
+        }
+
+        // Function to delete an assignment
+        function deleteAssignment(assignmentId) {
+            let assignments = JSON.parse(localStorage.getItem('assignments')) || [];
+            assignments = assignments.filter(assignment => assignment.id !== parseInt(assignmentId));
+            localStorage.setItem('assignments', JSON.stringify(assignments));
+            loadAssignments();  // Reload the assignments after deletion
+        }
+
+        // Load assignments when the page loads
+        loadAssignments();
+    </script>
+
+</body>
+</html>

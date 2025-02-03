@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        button {
+            margin: 10px;
+        }
+        ul {
+            list-style-type: none;
+        }
+        li {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Class Dashboard</h1>
+
+    <div>
+        <h3>Current Classes</h3>
+        <ul id="class-list">
+            <!-- Classes will be listed here -->
+        </ul>
+        <button onclick="addNewClass()">Add New Class</button>
+    </div>
+
+    <script>
+        // Function to load classes from localStorage
+        function loadClasses() {
+            const classes = JSON.parse(localStorage.getItem('classes')) || [];
+            const classListElement = document.getElementById('class-list');
+            classListElement.innerHTML = '';  // Clear the current list before adding new data
+            
+            if (classes.length > 0) {
+                classes.forEach(classItem => {
+                    classListElement.innerHTML += `
+                        <li>
+                            ${classItem.name} - ${classItem.room} 
+                            <button onclick="editClass('${classItem.id}')">Edit</button>
+                            <button onclick="deleteClass('${classItem.id}')">Delete</button>
+                        </li>
+                    `;
+                });
+            } else {
+                classListElement.innerHTML = '<li>No classes found.</li>';
+            }
+        }
+
+        // Function to add a new class
+        function addNewClass() {
+            const className = prompt("Enter the class name:");
+            const classRoom = prompt("Enter the room number:");
+            
+            if (className && classRoom) {
+                const newClass = {
+                    id: new Date().getTime(),  // Unique ID based on current time
+                    name: className,
+                    room: classRoom
+                };
+                let classes = JSON.parse(localStorage.getItem('classes')) || [];
+                classes.push(newClass);
+                localStorage.setItem('classes', JSON.stringify(classes));
+                loadClasses();  // Reload the classes after adding the new one
+            } else {
+                alert("Class name and room are required.");
+            }
+        }
+
+        // Function to edit an existing class
+        function editClass(classId) {
+            let classes = JSON.parse(localStorage.getItem('classes')) || [];
+            const classToEdit = classes.find(classItem => classItem.id === parseInt(classId));
+
+            if (classToEdit) {
+                const newClassName = prompt("Edit the class name:", classToEdit.name);
+                const newRoomNumber = prompt("Edit the room number:", classToEdit.room);
+                
+                if (newClassName && newRoomNumber) {
+                    classToEdit.name = newClassName;
+                    classToEdit.room = newRoomNumber;
+                    localStorage.setItem('classes', JSON.stringify(classes));
+                    loadClasses();  // Reload the classes after editing
+                }
+            }
+        }
+
+        // Function to delete an existing class
+        function deleteClass(classId) {
+            let classes = JSON.parse(localStorage.getItem('classes')) || [];
+            classes = classes.filter(classItem => classItem.id !== parseInt(classId));
+            localStorage.setItem('classes', JSON.stringify(classes));
+            loadClasses();  // Reload the classes after deletion
+        }
+
+        // Load classes when the page loads
+        loadClasses();
+    </script>
+
+</body>
+</html>

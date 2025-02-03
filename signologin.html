@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Signup</title>
+    <link rel="stylesheet" href="styli.css"> <!-- Link to your CSS file -->
+</head>
+<body>
+
+    <div class="container">
+        <h1>Welcome</h1>
+
+        <!-- Login Form -->
+        <div id="login-form-section" class="form-section">
+            <h2>Login</h2>
+            <form id="login-form" action="db_connect.php" method="GET">
+                <label for="login-email">Email:</label>
+                <input type="email" id="login-email" name="email" required><br>
+
+                <label for="login-password">Password:</label>
+                <input type="password" id="login-password" name="password" required><br>
+
+                <label for="login-role">Role:</label>
+                <select id="login-role" required>
+                    <option value="admin">Admin</option>
+                    <option value="teacher">Teacher</option>
+                    <option value="student">Student</option>
+                    <option value="parent">Parent</option>
+                </select><br>
+
+                <button type="submit">Login</button>
+            </form>
+            <p>Don't have an account? <a href="javascript:void(0);" id="show-signup">Sign up here</a></p>
+        </div>
+
+        <!-- Signup Form -->
+        <div id="signup-form-section" class="form-section" style="display: none;" >
+            <h2>Signup</h2>
+            <form id="signup-form" action="signin.php" method="POST">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required><br>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required><br>
+
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required><br>
+
+                <label for="role">Role:</label>
+                <select id="role" required>
+                    <option value="admin">Admin</option>
+                    <option value="teacher">Teacher</option>
+                    <option value="student">Student</option>
+                    <option value="parent">Parent</option>
+                </select><br>
+
+                <div id="child-info" style="display: none;">
+                    <label for="child-id">Child's Unique ID:</label>
+                    <input type="text" id="child-id" required><br>
+
+                    <label for="child-email">Child's Email:</label>
+                    <input type="email" id="child-email" required><br>
+                </div>
+
+                <button type="submit">Sign Up</button>
+            </form>
+            <p>Already have an account? <a href="" id="show-login">Login here</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Toggle between Login and Signup Forms
+        document.getElementById('show-signup').addEventListener('click', function() {
+            document.getElementById('login-form-section').style.display = 'none';
+            document.getElementById('signup-form-section').style.display = 'block';
+        });
+
+        document.getElementById('show-login').addEventListener('click', function() {
+            document.getElementById('signup-form-section').style.display = 'none';
+            document.getElementById('login-form-section').style.display = 'block';
+        });
+
+        // Show child info fields if the role is 'parent'
+        document.getElementById('role').addEventListener('change', function() {
+            const role = this.value;
+            if (role === 'parent') {
+                document.getElementById('child-info').style.display = 'block';
+            } else {
+                document.getElementById('child-info').style.display = 'none';
+            }
+        });
+
+        // Handle Signup Form Submission
+        document.getElementById('signup-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const role = document.getElementById('role').value;
+            const childId = role === 'parent' ? document.getElementById('child-id').value : null;
+            const childEmail = role === 'parent' ? document.getElementById('child-email').value : null;
+
+            const userData = { username, email, password, role, childId, childEmail };
+
+            // Store user data in localStorage
+            let users = JSON.parse(localStorage.getItem('users')) || [];
+            users.push(userData);
+            localStorage.setItem('users', JSON.stringify(users));
+
+            // Show success message
+            alert('Signup Successful!');
+            window.location.href = "login.html";  // Redirect after signup
+        });
+
+        // Handle Login Form Submission
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const role = document.getElementById('login-role').value;
+
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+
+            // Find user by email, password, and role
+            const user = users.find(user => user.email === email && user.password === password && user.role === role);
+
+            if (user) {
+                alert(`Login Successful! Welcome, ${user.username}`);
+
+                // Redirect based on role
+                if (user.role === "admin") {
+                    window.location.href = "admin.html";
+                } else if (user.role === "teacher") {
+                    window.location.href = "teacher.html";
+                } else if (user.role === "student") {
+                    window.location.href = "student.html";
+                } else if (user.role === "parent") {
+                    window.location.href = `parent.html?childId=${encodeURIComponent(user.childId)}&childEmail=${encodeURIComponent(user.childEmail)}`;
+                }
+            } else {
+                alert('Invalid email, password, or role');
+            }
+        });
+    </script>
+
+</body>
+</html>

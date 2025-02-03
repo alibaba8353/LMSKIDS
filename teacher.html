@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Teacher Dashboard</h1>
+    </header>
+    <div class="container">
+        <h2>Teacher Actions</h2>
+        <button onclick="manageClasses()">Manage Classes</button>
+        <button onclick="createAssignment()">Create Assignment</button>
+        <button onclick="gradeAssignments()">Grade Assignments</button>
+        <button onclick="viewStudentProgress()">View Student Progress</button>
+        <div id="data-display" style="margin-top: 20px;">
+            <!-- Data will be displayed here -->
+        </div>
+    </div>
+
+    <script src="teacher.js"></script>
+</body>
+</html>
